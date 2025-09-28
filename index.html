@@ -21,6 +21,20 @@
             opacity: 0;
             transform: scale(0.9);
         }
+        #location-section.hidden {
+            opacity: 0;
+            transform: scaleY(0.9);
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-top: 0;
+            overflow: hidden;
+        }
+        #location-section {
+            transition: all 0.3s ease-out;
+            transform-origin: top;
+            max-height: 500px; /* Adjust as needed */
+        }
     </style>
      <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
      <script>
@@ -41,11 +55,9 @@
     <div class="w-full max-w-2xl mx-auto p-4 md:p-6">
         <div class="bg-white rounded-xl shadow-lg">
             <!-- Header -->
-            <div class="p-4 md:p-6 border-b border-gray-200 flex justify-between items-center">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-800">Bulk Inventory Scanner</h1>
-                </div>
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACACAMAAAC20lt+AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAzUExURQAAAP8A//8AAP8A/wD/AP//AAAA/wD/AAAAAP8A/wD//////wD/AP8A/wD/AAD/AP8AAP8A50GaeAAAAAx0Uk5T/////////+9A/79A/0D/QL/3x0YAAAAJcEhcwAADsMAAA7DAcdvqGQAAARuSURBVHja7d3blqsgEAVQRIygguD93/ZUU1qU1oFp4DW525y/p1QFaWYgIAAAAAAAAAAAAAAAAAAAAAAAAAAA8D/ENn1n43n3b+s7LzWp1/P1eZ34/T3vYQhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWP4b4jZ9d/P591/re201uR/PVeZv097/lP/A8OYgG2l1uQ3tC99b2g/IqC1yZ1t6bO9fYgBCGvY9ob2pZf9n7aP/tUmtzKtr2/tQwxAWMP+pr/tQwxAWMP+pj8GMA5g/D2D/Q1/+xADENaw/w/9bQ9iAMIa9jftb3sQAxDWsL9pb3sQAxDWMJ9pb3sQAxDWMJ9p/1c+xp/tQwxAWMO8De9tD2IAwhr2N723PYgBCGvY3/Te9iAGIKxh3ob3tgcxAGFN/9P724MYgLCm/+n9bW97EAMQ1vT//e5tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAAAAAAAAAAAAAAAAAAAAAAAAAAAD4K/4AYvN+K7AmnzQAAAAASUVORK5CYII=" alt="iMED Logo" class="h-12">
+            <div class="p-4 md:p-6 border-b border-gray-200">
+                <h1 class="text-2xl font-bold text-imed-teal">iMED ALL inc.</h1>
+                <p class="text-md font-semibold text-imed-orange">Inventory Scanner</p>
             </div>
 
             <!-- Scanner & Form -->
@@ -78,14 +90,15 @@
                         <p id="placeholder-text" class="text-gray-400 text-center pt-8">Scan an item to begin</p>
                     </div>
                 </div>
-
-                <!-- Location Dropdown -->
-                <div class="mt-4">
+                
+                <!-- Location Section Wrapper -->
+                <div id="location-section" class="mt-4">
                     <div class="flex justify-between items-center mb-1">
                         <label for="location-select" class="block text-sm font-medium text-gray-700">New Location for Selected Items</label>
                         <button id="add-location-btn" class="text-sm text-imed-teal hover:underline focus:outline-none">+ Add New</button>
                     </div>
-                    <select id="location-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-imed-teal focus:border-imed-teal transition disabled:bg-gray-200 disabled:cursor-not-allowed">
+                    <select id="location-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-imed-teal focus:border-imed-teal transition">
+                        <option value="" disabled selected>Select location for items</option>
                         <option value="Ampronix">Ampronix</option>
                         <option value="Art Luna">Art Luna</option>
                         <option value="Bach">Bach</option>
@@ -400,8 +413,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- CONFIGURATION ---
-            const API_KEY = "qllNQ-f749u-FQvYI-v8phw-6uh00-OB8h5-haQlE-9Siqm";
-            const APP_ID = "334898795";
+            const API_KEY = "V2-p5nLK-I6suM-yAVyE-bhP5n-TaFuq-uDBbY-vjvr0-8RoEu";
+            const APP_ID = "876dcdc3-0570-427f-9be0-53367d74bf69";
             const TABLE_NAME = "Siemens Stock";
             const BARCODE_COLUMN = "index";
             const NAME_COLUMN = "Name";
@@ -426,7 +439,8 @@
                 addLocationBtn: document.getElementById('add-location-btn'),
                 newLocationForm: document.getElementById('new-location-form'),
                 newLocationInput: document.getElementById('new-location-input'),
-                saveLocationBtn: document.getElementById('save-location-btn')
+                saveLocationBtn: document.getElementById('save-location-btn'),
+                locationSection: document.getElementById('location-section')
             };
             let audioContext;
             try { audioContext = new (window.AudioContext || window.webkitAudioContext)(); } 
@@ -450,7 +464,11 @@
                 const selectedCount = getSelectedBarcodes().length;
                 elements.scanCount.textContent = scannedItems.size;
                 elements.placeholder.style.display = scannedItems.size === 0 ? 'block' : 'none';
-                elements.submitButton.disabled = selectedCount === 0;
+                
+                const isDateOnly = elements.dateOnlyCheckbox.checked;
+                const isLocationSelected = elements.locationSelect.value !== "";
+                elements.submitButton.disabled = selectedCount === 0 || (!isDateOnly && !isLocationSelected);
+
                 elements.submitButton.textContent = selectedCount > 0 ? `Update ${selectedCount} Selected Item(s)` : 'Update Selected Items';
 
                 const allCheckboxes = elements.itemsContainer.querySelectorAll('.item-checkbox');
@@ -471,23 +489,28 @@
             
             const addItemToUI = (item) => {
                 const itemCard = document.createElement('div');
-                itemCard.className = 'item-card border bg-white p-3 rounded-lg shadow-sm mb-2 flex items-start';
+                itemCard.className = 'item-card border bg-white p-3 rounded-lg shadow-sm mb-2 flex justify-between items-start';
                 itemCard.dataset.barcode = item[BARCODE_COLUMN];
 
                 const name = item[NAME_COLUMN] || 'N/A';
                 const pn = item[PN_COLUMN] || 'N/A';
                 const sn = item[SN_COLUMN] || 'N/A';
                 const date = item[DATE_COLUMN] ? new Date(item[DATE_COLUMN]).toLocaleDateString() : 'N/A';
+                const location = item[LOCATION_COLUMN] || 'Not Set';
 
                 itemCard.innerHTML = `
-                    <div class="flex items-center">
-                        <input type="checkbox" class="item-checkbox h-4 w-4 text-imed-teal focus:ring-imed-teal border-gray-300 rounded mr-4" data-barcode="${item[BARCODE_COLUMN]}">
+                    <div class="flex items-start">
+                        <input type="checkbox" class="item-checkbox h-4 w-4 text-imed-teal focus:ring-imed-teal border-gray-300 rounded mr-4 mt-1" data-barcode="${item[BARCODE_COLUMN]}">
                         <div>
                             <p class="font-bold text-gray-800">${item[BARCODE_COLUMN]}</p>
                             <p class="text-sm text-gray-600">${name}</p>
                             <p class="text-xs text-gray-500">PN: ${pn} | SN: ${sn}</p>
                             <p class="text-xs text-gray-500 mt-1">Last Verified: ${date}</p>
                         </div>
+                    </div>
+                    <div class="text-right flex-shrink-0 ml-4">
+                         <p class="text-xs text-gray-500 mb-1">Current Location</p>
+                         <p class="font-semibold text-gray-700 break-words">${location}</p>
                     </div>
                     <button class="text-red-400 hover:text-red-600 font-bold text-xl ml-2" data-barcode-remove="${item[BARCODE_COLUMN]}">&times;</button>
                 `;
@@ -498,16 +521,42 @@
             const findItemByBarcode = async (barcode) => {
                 elements.spinner.classList.remove('hidden');
                 setStatus(`Looking up ${barcode}...`);
-                const API_URL = `https://api.appsheet.com/api/v2/apps/${APP_ID}/tables/${TABLE_NAME}/action`;
+                const encodedTableName = encodeURIComponent(TABLE_NAME);
+                const API_URL = `https://api.appsheet.com/api/v2/apps/${APP_ID}/tables/${encodedTableName}/action`;
                 try {
                     const response = await fetch(API_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'ApplicationAccessKey': API_KEY },
-                        body: JSON.stringify({ "Action": "Find", "Properties": {}, "Rows": [], "Selector": `FILTER("${TABLE_NAME}", [${BARCODE_COLUMN}] = "${barcode}")` })
+                        body: JSON.stringify({
+                            "Action": "Find",
+                            "Properties": {},
+                            "Rows": [],
+                            "Selector": `FILTER("${TABLE_NAME}", CONTAINS([${BARCODE_COLUMN}], "${barcode}"))`
+                        })
                     });
-                    if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+                     if (!response.ok) {
+                        const errorBody = await response.text();
+                        console.error("AppSheet API Error Body:", errorBody);
+                        throw new Error(`API Error ${response.status}: ${errorBody || response.statusText}`);
+                    }
                     const data = await response.json();
-                    return data[0];
+                    
+                    if (data && data.length > 0) {
+                        // If CONTAINS returns multiple results, find the exact match
+                        const exactMatch = data.find(item => item[BARCODE_COLUMN].toLowerCase() === barcode.toLowerCase());
+                        if (exactMatch) {
+                            return exactMatch;
+                        }
+                        
+                        // If no exact match but we got results, it's a mismatch (e.g., i1 matches i10)
+                        if (data.length > 0) {
+                            console.error("API returned mismatched barcode!", "Scanned:", barcode, "Returned:", data[0][BARCODE_COLUMN]);
+                            setStatus(`Error: API returned wrong item (${data[0][BARCODE_COLUMN]})`, true);
+                            return null;
+                        }
+                    } 
+                    
+                    return null; // Explicitly return null if no data or no exact match
                 } catch (error) {
                     console.error("API Find Error:", error);
                     setStatus(error.message, true);
@@ -521,34 +570,48 @@
                 const selectedBarcodes = getSelectedBarcodes();
                 if (selectedBarcodes.length === 0) return;
 
+                const isDateOnlyUpdate = elements.dateOnlyCheckbox.checked;
+                if (!isDateOnlyUpdate && elements.locationSelect.value === "") {
+                    setStatus("Please select a location before updating.", true);
+                    return;
+                }
+
                 elements.submitButton.textContent = "Updating...";
                 elements.submitButton.disabled = true;
 
                 const today = new Date();
                 const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
                 const newLocation = elements.locationSelect.value;
-                const isDateOnlyUpdate = elements.dateOnlyCheckbox.checked;
                 
                 const rowsToUpdate = selectedBarcodes.map(barcode => {
-                    const row = { [BARCODE_COLUMN]: barcode, [DATE_COLUMN]: formattedDate };
+                    const itemData = scannedItems.get(barcode);
+                    const row = {
+                        _RowNumber: itemData._RowNumber, // Use the specific row number for accuracy
+                        [BARCODE_COLUMN]: barcode, 
+                        [DATE_COLUMN]: formattedDate 
+                    };
                     if (!isDateOnlyUpdate) {
                         row[LOCATION_COLUMN] = newLocation;
                     }
                     return row;
                 });
                 
-                const API_URL = `https://api.appsheet.com/api/v2/apps/${APP_ID}/tables/${TABLE_NAME}/action`;
+                const encodedTableName = encodeURIComponent(TABLE_NAME);
+                const API_URL = `https://api.appsheet.com/api/v2/apps/${APP_ID}/tables/${encodedTableName}/action`;
                 try {
                     const response = await fetch(API_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'ApplicationAccessKey': API_KEY },
                         body: JSON.stringify({ "Action": "Edit", "Properties": { "Locale": "en-US" }, "Rows": rowsToUpdate })
                     });
-                    if (!response.ok) throw new Error(`API Update Error: ${response.statusText}`);
+                    if (!response.ok) {
+                        const errorBody = await response.text();
+                        console.error("AppSheet API Error Body:", errorBody);
+                        throw new Error(`API Update Error ${response.status}: ${errorBody || response.statusText}`);
+                    }
                      
                     setStatus(`Successfully updated ${rowsToUpdate.length} items!`);
                     
-                    // Remove updated items from UI and state
                     selectedBarcodes.forEach(barcode => {
                         scannedItems.delete(barcode);
                         const cardToRemove = document.querySelector(`[data-barcode="${barcode}"]`);
@@ -559,7 +622,7 @@
                     console.error("API Update Error:", error);
                     setStatus(error.message, true);
                 } finally {
-                    updateUI(); // Resets button text and state
+                    updateUI();
                 }
             };
 
@@ -570,9 +633,14 @@
                     const barcode = elements.barcodeInput.value.trim();
                     if (!barcode) return;
                     
-                    if (scannedItems.has(barcode)) {
-                        setStatus(`Item ${barcode} is already scanned.`, true);
+                    const alreadyScanned = Array.from(scannedItems.values()).some(
+                        item => item[BARCODE_COLUMN].toLowerCase() === barcode.toLowerCase()
+                    );
+
+                    if (alreadyScanned) {
+                        setStatus(`Item ${barcode.toUpperCase()} is already scanned.`, true);
                         elements.barcodeInput.value = '';
+                        elements.barcodeInput.focus();
                         return;
                     }
 
@@ -580,14 +648,15 @@
 
                     if (itemData) {
                         playBeep();
-                        scannedItems.set(barcode, itemData);
+                        scannedItems.set(itemData[BARCODE_COLUMN], itemData);
                         addItemToUI(itemData);
-                        setStatus(`Found: ${itemData[NAME_COLUMN] || barcode}`);
+                        setStatus(`Found: ${itemData[NAME_COLUMN] || itemData[BARCODE_COLUMN]}`);
                     } else {
-                        setStatus(`Item ${barcode} not found in AppSheet.`, true);
+                        setStatus(`Item ${barcode.toUpperCase()} not found in AppSheet.`, true);
                     }
 
                     elements.barcodeInput.value = '';
+                    elements.barcodeInput.focus();
                     updateUI();
                 }
             });
@@ -603,7 +672,6 @@
                     }
                 }
                 
-                // Update UI regardless of what was clicked inside
                 updateUI();
             });
             
@@ -614,14 +682,25 @@
             });
 
             elements.dateOnlyCheckbox.addEventListener('change', (e) => {
-                elements.locationSelect.disabled = e.target.checked;
+                elements.locationSection.classList.toggle('hidden', e.target.checked);
+                updateUI();
             });
+
+            elements.locationSelect.addEventListener('change', updateUI);
 
             elements.submitButton.addEventListener('click', updateItemsInAppSheet);
 
             elements.addLocationBtn.addEventListener('click', () => {
-                elements.newLocationForm.classList.toggle('hidden');
-                elements.newLocationInput.focus();
+                const form = elements.newLocationForm;
+                const isHidden = form.classList.contains('hidden');
+                form.classList.toggle('hidden');
+
+                if (isHidden) {
+                    elements.addLocationBtn.textContent = '- Hide';
+                    elements.newLocationInput.focus();
+                } else {
+                    elements.addLocationBtn.textContent = '+ Add New';
+                }
             });
 
             elements.saveLocationBtn.addEventListener('click', () => {
@@ -642,9 +721,12 @@
                         elements.locationSelect.appendChild(newOption);
 
                         const options = Array.from(elements.locationSelect.options);
+                        // Exclude the disabled placeholder from sorting
+                        const placeholder = options.shift();
                         options.sort((a, b) => a.text.localeCompare(b.text));
                         
                         elements.locationSelect.innerHTML = '';
+                        elements.locationSelect.appendChild(placeholder);
                         options.forEach(opt => elements.locationSelect.appendChild(opt));
                     }
                     
@@ -652,6 +734,8 @@
                     
                     elements.newLocationInput.value = '';
                     elements.newLocationForm.classList.add('hidden');
+                    elements.addLocationBtn.textContent = '+ Add New';
+                    updateUI();
                 }
             });
         });

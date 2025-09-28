@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iMED AppSheet Scanner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #scanned-items-container::-webkit-scrollbar { width: 4px; }
+        #scanned-items-container::-webkit-scrollbar-thumb { background-color: #9ca3af; border-radius: 20px; }
+        .item-card {
+            transition: all 0.3s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .item-card.fade-out {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+    </style>
+     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+     <script>
+        // Custom Tailwind theme to match the iMED logo colors
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                'imed-teal': '#047879',
+                'imed-orange': '#f37f31',
+              }
+            }
+          }
+        }
+      </script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-2xl mx-auto p-4 md:p-6">
+        <div class="bg-white rounded-xl shadow-lg">
+            <!-- Header -->
+            <div class="p-4 md:p-6 border-b border-gray-200 flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Bulk Inventory Scanner</h1>
+                </div>
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACACAMAAAC20lt+AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAzUExURQAAAP8A//8AAP8A/wD/AP//AAAA/wD/AAAAAP8A/wD//////wD/AP8A/wD/AAD/AP8AAP8A50GaeAAAAAx0Uk5T/////////+9A/79A/0D/QL/3x0YAAAAJcEhcwAADsMAAA7DAcdvqGQAAARuSURBVHja7d3blqsgEAVQRIygguD93/ZUU1qU1oFp4DW525y/p1QFaWYgIAAAAAAAAAAAAAAAAAAAAAAAAAAA8D/ENn1n43n3b+s7LzWp1/P1eZ34/T3vYQhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWEIQ1jCEPYwhDWP4b4jZ9d/P591/re201uR/PVeZv097/lP/A8OYgG2l1uQ3tC99b2g/IqC1yZ1t6bO9fYgBCGvY9ob2pZf9n7aP/tUmtzKtr2/tQwxAWMP+pr/tQwxAWMP+pj8GMA5g/D2D/Q1/+xADENaw/w/9bQ9iAMIa9jftb3sQAxDWsL9pb3sQAxDWMJ9pb3sQAxDWMJ9p/1c+xp/tQwxAWMO8De9tD2IAwhr2N723PYgBCGvY3/Te9iAGIKxh3ob3tgcxAGFN/9P724MYgLCm/+n9bW97EAMQ1vT//e5tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAwhr2N/1tD2IAAAAAAAAAAAAAAAAAAAAAAAAAAAD4K/4AYvN+K7AmnzQAAAAASUVORK5CYII=" alt="iMED Logo" class="h-12">
+            </div>
+
+            <!-- Scanner & Form -->
+            <div class="p-4 md:p-6">
+                <!-- Barcode Input Section -->
+                <div id="scanner-container">
+                    <label for="barcode-input" class="block text-sm font-medium text-gray-700 mb-1">Barcode Input</label>
+                    <div class="relative">
+                        <input type="text" id="barcode-input" autofocus placeholder="Scan or type barcode and press Enter" class="w-full p-3 pr-10 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-imed-teal focus:border-imed-teal transition">
+                        <div id="spinner" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center">
+                            <svg class="animate-spin h-5 w-5 text-imed-teal" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                     <p id="status-text" class="mt-2 text-center text-sm text-gray-500 h-5"></p>
+                </div>
+
+                <!-- Scanned Items List -->
+                <div class="mt-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="font-semibold text-gray-700">Scanned Items (<span id="scan-count">0</span>)</h2>
+                        <div class="flex items-center">
+                            <input id="select-all-checkbox" type="checkbox" class="h-4 w-4 text-imed-teal focus:ring-imed-teal border-gray-300 rounded">
+                            <label for="select-all-checkbox" class="ml-2 block text-sm text-gray-900">Select All</label>
+                        </div>
+                    </div>
+                    <div id="scanned-items-container" class="bg-gray-50 border border-gray-200 rounded-lg p-3 min-h-[8rem] max-h-72 overflow-y-auto">
+                        <p id="placeholder-text" class="text-gray-400 text-center pt-8">Scan an item to begin</p>
+                    </div>
+                </div>
+
+                <!-- Location Dropdown -->
+                <div class="mt-4">
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="location-select" class="block text-sm font-medium text-gray-700">New Location for Selected Items</label>
+                        <button id="add-location-btn" class="text-sm text-imed-teal hover:underline focus:outline-none">+ Add New</button>
+                    </div>
+                    <select id="location-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-imed-teal focus:border-imed-teal transition disabled:bg-gray-200 disabled:cursor-not-allowed">
+                        <option value="Ampronix">Ampronix</option>
+                        <option value="Art Luna">Art Luna</option>
+                        <option value="Bach">Bach</option>
+                        <option value="Blue Case">Blue Case</option>
+                        <option value="Blue Case 1">Blue Case 1</option>
+                        <option value="Blue Case 2">Blue Case 2</option>
+                        <option value="Blue Case 3">Blue Case 3</option>
+                        <option value="BOTN">BOTN</option>
+                        <option value="Bullfinch">Bullfinch</option>
+                        <option value="C13">C13</option>
+                        <option value="Cabinet Pluto">Cabinet Pluto</option>
+                        <option value="Calscan">Calscan</option>
+                        <option value="CMPP DMI Sequoia">CMPP DMI Sequoia</option>
+                        <option value="CR10">CR10</option>
+                        <option value="CR10 / Creek Pallet">CR10 / Creek Pallet</option>
+                        <option value="CR11">CR11</option>
+                        <option value="CR11 / Tub A">CR11 / Tub A</option>
+                        <option value="CR11 / Tub F">CR11 / Tub F</option>
+                        <option value="CR11 / Tub J">CR11 / Tub J</option>
+                        <option value="CR12 / Crate 11">CR12 / Crate 11</option>
+                        <option value="CR12 / Crate 9">CR12 / Crate 9</option>
+                        <option value="CR12 / Crate B">CR12 / Crate B</option>
+                        <option value="CR12 / Crate C">CR12 / Crate C</option>
+                        <option value="CR12 / Crate G">CR12 / Crate G</option>
+                        <option value="CR12 / Crate H">CR12 / Crate H</option>
+                        <option value="CR12 / Intercom Crate">CR12 / Intercom Crate</option>
+                        <option value="CR12 / Crate J">CR12 / Crate J</option>
+                        <option value="CR12 / Crate P">CR12 / Crate P</option>
+                        <option value="CR12 / Crate V">CR12 / Crate V</option>
+                        <option value="CR12 / Crate Y">CR12 / Crate Y</option>
+                        <option value="CR13 / Crate 1">CR13 / Crate 1</option>
+                        <option value="CR13 / Crate 10">CR13 / Crate 10</option>
+                        <option value="CR13 / Crate 11">CR13 / Crate 11</option>
+                        <option value="CR13 / Crate 2">CR13 / Crate 2</option>
+                        <option value="CR13 / Crate 3">CR13 / Crate 3</option>
+                        <option value="CR13 / Crate 4">CR13 / Crate 4</option>
+                        <option value="CR13 / Crate 5">CR13 / Crate 5</option>
+                        <option value="CR13 / Crate 6">CR13 / Crate 6</option>
+                        <option value="CR13 / Crate 7">CR13 / Crate 7</option>
+                        <option value="CR13 / Crate 8">CR13 / Crate 8</option>
+                        <option value="CR13 / Crate 9">CR13 / Crate 9</option>
+                        <option value="CR13 / CR11">CR13 / CR11</option>
+                        <option value="CR13 / Repair Crate">CR13 / Repair Crate</option>
+                        <option value="CR14">CR14</option>
+                        <option value="CR14 / Crate 12">CR14 / Crate 12</option>
+                        <option value="CR14 / Crate 13">CR14 / Crate 13</option>
+                        <option value="CR14 / Crate 14">CR14 / Crate 14</option>
+                        <option value="CR14 / Crate 15">CR14 / Crate 15</option>
+                        <option value="CR14 / Crate 16">CR14 / Crate 16</option>
+                        <option value="CR14 / Crate 17">CR14 / Crate 17</option>
+                        <option value="CR14 / Crate 18">CR14 / Crate 18</option>
+                        <option value="CR14 / Crate 19">CR14 / Crate 19</option>
+                        <option value="CR14 / Crate 20">CR14 / Crate 20</option>
+                        <option value="CR14 / Crate 21">CR14 / Crate 21</option>
+                        <option value="CR14 / Crate 22">CR14 / Crate 22</option>
+                        <option value="CR14 / Crate DRD">CR14 / Crate DRD</option>
+                        <option value="CR15">CR15</option>
+                        <option value="CR15 / Tub 11">CR15 / Tub 11</option>
+                        <option value="CR15 / Tub 12">CR15 / Tub 12</option>
+                        <option value="CR15 / Tub A">CR15 / Tub A</option>
+                        <option value="CR15 / Tub C">CR15 / Tub C</option>
+                        <option value="CR15 / Tub D">CR15 / Tub D</option>
+                        <option value="CR15 / Tub I">CR15 / Tub I</option>
+                        <option value="CR15 / Tub K">CR15 / Tub K</option>
+                        <option value="CR15 / Tub M">CR15 / Tub M</option>
+                        <option value="CR15 / Tub W">CR15 / Tub W</option>
+                        <option value="CR15 / Tub Y">CR15 / Tub Y</option>
+                        <option value="CR21">CR21</option>
+                        <option value="CR30">CR30</option>
+                        <option value="CR31">CR31</option>
+                        <option value="CR31 / Pallet Box P">CR31 / Pallet Box P</option>
+                        <option value="CR32">CR32</option>
+                        <option value="CR32 / Box PSU">CR32 / Box PSU</option>
+                        <option value="CR33">CR33</option>
+                        <option value="CR33 / Pallet Z">CR33 / Pallet Z</option>
+                        <option value="CR42">CR42</option>
+                        <option value="CR42 / Tub Q">CR42 / Tub Q</option>
+                        <option value="CR43">CR43</option>
+                        <option value="CR44">CR44</option>
+                        <option value="CR44 / Crate 22">CR44 / Crate 22</option>
+                        <option value="CR44 / Crate 24">CR44 / Crate 24</option>
+                        <option value="CR44 / Tub P">CR44 / Tub P</option>
+                        <option value="CR45">CR45</option>
+                        <option value="Crate 13 / Crate 11">Crate 13 / Crate 11</option>
+                        <option value="Crate Coils">Crate Coils</option>
+                        <option value="CryoServ">CryoServ</option>
+                        <option value="Customer">Customer</option>
+                        <option value="Dans Shelf">Dans Shelf</option>
+                        <option value="Darrell Oden">Darrell Oden</option>
+                        <option value="Dasan">Dasan</option>
+                        <option value="discarded">discarded</option>
+                        <option value="Dynamic">Dynamic</option>
+                        <option value="Eddie Jorquera">Eddie Jorquera</option>
+                        <option value="Emotion 16 / PET Gantry">Emotion 16 / PET Gantry</option>
+                        <option value="Fridge Room">Fridge Room</option>
+                        <option value="Garaz">Garaz</option>
+                        <option value="H1">H1</option>
+                        <option value="H2">H2</option>
+                        <option value="H2 / Tub K">H2 / Tub K</option>
+                        <option value="H20">H20</option>
+                        <option value="H21">H21</option>
+                        <option value="H22">H22</option>
+                        <option value="H23">H23</option>
+                        <option value="H23 / Tub T">H23 / Tub T</option>
+                        <option value="H24">H24</option>
+                        <option value="H3">H3</option>
+                        <option value="H3 / Tub P">H3 / Tub P</option>
+                        <option value="H30">H30</option>
+                        <option value="H31">H31</option>
+                        <option value="H32">H32</option>
+                        <option value="H33">H33</option>
+                        <option value="H4">H4</option>
+                        <option value="H40">H40</option>
+                        <option value="H41">H41</option>
+                        <option value="H42">H42</option>
+                        <option value="H43">H43</option>
+                        <option value="Harvest 11">Harvest 11</option>
+                        <option value="Hassan">Hassan</option>
+                        <option value="HTC">HTC</option>
+                        <option value="Intercom Crate">Intercom Crate</option>
+                        <option value="Jadran">Jadran</option>
+                        <option value="James">James</option>
+                        <option value="Jozef Samei">Jozef Samei</option>
+                        <option value="leo santos">leo santos</option>
+                        <option value="Lost">Lost</option>
+                        <option value="lost">lost</option>
+                        <option value="M11">M11</option>
+                        <option value="M12">M12</option>
+                        <option value="M13">M13</option>
+                        <option value="M14">M14</option>
+                        <option value="M15">M15</option>
+                        <option value="M16">M16</option>
+                        <option value="M22">M22</option>
+                        <option value="M23">M23</option>
+                        <option value="M24">M24</option>
+                        <option value="M25">M25</option>
+                        <option value="M26">M26</option>
+                        <option value="M31">M31</option>
+                        <option value="M32">M32</option>
+                        <option value="M33">M33</option>
+                        <option value="M35">M35</option>
+                        <option value="M36">M36</option>
+                        <option value="Maria Denson">Maria Denson</option>
+                        <option value="Mazin">Mazin</option>
+                        <option value="Medical Outfitters">Medical Outfitters</option>
+                        <option value="Miscellaneous Pallet">Miscellaneous Pallet</option>
+                        <option value="MPCU3 Repair box">MPCU3 Repair box</option>
+                        <option value="Mykleby">Mykleby</option>
+                        <option value="None">None</option>
+                        <option value="old wh">old wh</option>
+                        <option value="old wh / C5">old wh / C5</option>
+                        <option value="old wh / Electronic Cabinet Eca 0.35T">old wh / Electronic Cabinet Eca 0.35T</option>
+                        <option value="old wh / Lion crate">old wh / Lion crate</option>
+                        <option value="Outbound">Outbound</option>
+                        <option value="P1">P1</option>
+                        <option value="P1 / Cover Box">P1 / Cover Box</option>
+                        <option value="P2">P2</option>
+                        <option value="P2 / Repair Box C">P2 / Repair Box C</option>
+                        <option value="P3">P3</option>
+                        <option value="Pallet Box B">Pallet Box B</option>
+                        <option value="Pallet Med">Pallet Med</option>
+                        <option value="PL10">PL10</option>
+                        <option value="PL11">PL11</option>
+                        <option value="PL12">PL12</option>
+                        <option value="PL12 / Box Old Brushes">PL12 / Box Old Brushes</option>
+                        <option value="PL12 / Brush Box">PL12 / Brush Box</option>
+                        <option value="PL12 / Pump Box">PL12 / Pump Box</option>
+                        <option value="PL12 / Tub C">PL12 / Tub C</option>
+                        <option value="PL12 / Tub K">PL12 / Tub K</option>
+                        <option value="PL12 / Tub W">PL12 / Tub W</option>
+                        <option value="PL13">PL13</option>
+                        <option value="PL14">PL14</option>
+                        <option value="PL14 / Crate 16">PL14 / Crate 16</option>
+                        <option value="PL21">PL21</option>
+                        <option value="PL22 / H Pallet 1">PL22 / H Pallet 1</option>
+                        <option value="PL23">PL23</option>
+                        <option value="PL23 / Sam Pallet">PL23 / Sam Pallet</option>
+                        <option value="PL24">PL24</option>
+                        <option value="PL25">PL25</option>
+                        <option value="PL31">PL31</option>
+                        <option value="PL32">PL32</option>
+                        <option value="PL33">PL33</option>
+                        <option value="PL33 / Tub C">PL33 / Tub C</option>
+                        <option value="PL34">PL34</option>
+                        <option value="PL41 / Pallet A">PL41 / Pallet A</option>
+                        <option value="PL41 / Sam Pallet">PL41 / Sam Pallet</option>
+                        <option value="PL42 / C! Pallet 1">PL42 / C! Pallet 1</option>
+                        <option value="PL43">PL43</option>
+                        <option value="PL44">PL44</option>
+                        <option value="PL44 / SM Box">PL44 / SM Box</option>
+                        <option value="PL44 / Tub 11">PL44 / Tub 11</option>
+                        <option value="PL44 / Tub 12">PL44 / Tub 12</option>
+                        <option value="PL44 / Tub D">PL44 / Tub D</option>
+                        <option value="PL44 / Tub H">PL44 / Tub H</option>
+                        <option value="PL44 / Tub I">PL44 / Tub I</option>
+                        <option value="PL44 / Tub L">PL44 / Tub L</option>
+                        <option value="PL44 / Tub P">PL44 / Tub P</option>
+                        <option value="PL44 / Tub Y">PL44 / Tub Y</option>
+                        <option value="PL53">PL53</option>
+                        <option value="R&D">R&D</option>
+                        <option value="R&D / Amazon Box 2">R&D / Amazon Box 2</option>
+                        <option value="R&D / Blue Case">R&D / Blue Case</option>
+                        <option value="R&D / H21">R&D / H21</option>
+                        <option value="R&D / H23">R&D / H23</option>
+                        <option value="R&D / H31">R&D / H31</option>
+                        <option value="R&D / H33">R&D / H33</option>
+                        <option value="R&D / H4">R&D / H4</option>
+                        <option value="R&D / H40">R&D / H40</option>
+                        <option value="R&D / Lower Cabinet">R&D / Lower Cabinet</option>
+                        <option value="R&D / Testing Rack">R&D / Testing Rack</option>
+                        <option value="R&D / Tub K">R&D / Tub K</option>
+                        <option value="RR11">RR11</option>
+                        <option value="RR12">RR12</option>
+                        <option value="RR13">RR13</option>
+                        <option value="RR14">RR14</option>
+                        <option value="RR21">RR21</option>
+                        <option value="RR22">RR22</option>
+                        <option value="RR23">RR23</option>
+                        <option value="RR23 / Sentinel Accessory box">RR23 / Sentinel Accessory box</option>
+                        <option value="RR24">RR24</option>
+                        <option value="RR31">RR31</option>
+                        <option value="RR32">RR32</option>
+                        <option value="RR33">RR33</option>
+                        <option value="RR34">RR34</option>
+                        <option value="RR35">RR35</option>
+                        <option value="RR41">RR41</option>
+                        <option value="RR42">RR42</option>
+                        <option value="RR43">RR43</option>
+                        <option value="RR44">RR44</option>
+                        <option value="RR51">RR51</option>
+                        <option value="RR52">RR52</option>
+                        <option value="RR53">RR53</option>
+                        <option value="RR53 / Perma Box">RR53 / Perma Box</option>
+                        <option value="RR54">RR54</option>
+                        <option value="RR61">RR61</option>
+                        <option value="RR62">RR62</option>
+                        <option value="RR63">RR63</option>
+                        <option value="RR64">RR64</option>
+                        <option value="RR64 / Silicone box">RR64 / Silicone box</option>
+                        <option value="RR65">RR65</option>
+                        <option value="Samei / Testing Rack">Samei / Testing Rack</option>
+                        <option value="Samei Box">Samei Box</option>
+                        <option value="Samei box 10">Samei box 10</option>
+                        <option value="Scandinavian">Scandinavian</option>
+                        <option value="ScanMed">ScanMed</option>
+                        <option value="ShopMed">ShopMed</option>
+                        <option value="Software Box">Software Box</option>
+                        <option value="SWMR">SWMR</option>
+                        <option value="Tub 12">Tub 12</option>
+                        <option value="Tub K">Tub K</option>
+                        <option value="Tub N">Tub N</option>
+                        <option value="Tub Y">Tub Y</option>
+                        <option value="Virtus">Virtus</option>
+                        <option value="W11">W11</option>
+                        <option value="W12">W12</option>
+                        <option value="W13">W13</option>
+                        <option value="W14">W14</option>
+                        <option value="W15">W15</option>
+                        <option value="W16">W16</option>
+                        <option value="Warehouse">Warehouse</option>
+                        <option value="WH Orange">WH Orange</option>
+                        <option value="WH Orange / 2022 Definition accessory box">WH Orange / 2022 Definition accessory box</option>
+                        <option value="WH Orange / C! Cabinet Eca 0.35T">WH Orange / C! Cabinet Eca 0.35T</option>
+                        <option value="WH Orange / C! Cooler Cabinet">WH Orange / C! Cooler Cabinet</option>
+                        <option value="WH Orange / C! Pallet 1">WH Orange / C! Pallet 1</option>
+                        <option value="WH Orange / C! Pallet 2">WH Orange / C! Pallet 2</option>
+                        <option value="WH Orange / Emotion 16">WH Orange / Emotion 16</option>
+                        <option value="WH Orange / Gpa Pap 400 Cabinet">WH Orange / Gpa Pap 400 Cabinet</option>
+                        <option value="WH Orange / H Pallet 1">WH Orange / H Pallet 1</option>
+                        <option value="WH Orange / Miscellaneous Pallet">WH Orange / Miscellaneous Pallet</option>
+                        <option value="WH Orange / Mobile Dolley">WH Orange / Mobile Dolley</option>
+                        <option value="WH Orange / Pallet A">WH Orange / Pallet A</option>
+                        <option value="WH Orange / Pallet Crate">WH Orange / Pallet Crate</option>
+                        <option value="WH Orange / Patient Table Sensation 16">WH Orange / Patient Table Sensation 16</option>
+                        <option value="WH Orange / PET Gantry">WH Orange / PET Gantry</option>
+                        <option value="WH Orange / Phantom Pallet">WH Orange / Phantom Pallet</option>
+                        <option value="WH Orange / Saw Pallet">WH Orange / Saw Pallet</option>
+                        <option value="WH Orange / Silver case">WH Orange / Silver case</option>
+                        <option value="WH Orange / Warehouse">WH Orange / Warehouse</option>
+                        <option value="WH Orange / Wooden Crate">WH Orange / Wooden Crate</option>
+                        <option value="WH Orange / Yard">WH Orange / Yard</option>
+                        <option value="WH Orange/ India Crate">WH Orange/ India Crate</option>
+                        <option value="xgone">xgone</option>
+                        <option value="Yard">Yard</option>
+                        <option value="Ziad">Ziad</option>
+                    </select>
+                    <!-- Add New Location Form (hidden by default) -->
+                    <div id="new-location-form" class="hidden mt-2 flex gap-2">
+                        <input type="text" id="new-location-input" placeholder="Enter new location name" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-imed-teal focus:border-imed-teal transition">
+                        <button id="save-location-btn" class="bg-imed-orange text-white font-bold py-2 px-4 rounded-lg hover:bg-opacity-90">Save</button>
+                    </div>
+                </div>
+
+                <!-- Date Only Checkbox -->
+                <div class="mt-3 flex items-center">
+                    <input id="date-only-checkbox" type="checkbox" class="h-4 w-4 text-imed-teal focus:ring-imed-teal border-gray-300 rounded">
+                    <label for="date-only-checkbox" class="ml-2 block text-sm text-gray-900">Only update 'Verified Date' (keep current location)</label>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="mt-6">
+                    <button id="submit-button" class="w-full bg-imed-teal text-white font-bold py-3 px-4 rounded-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-imed-teal disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300 transform active:scale-95" disabled>
+                        Update Selected Items
+                    </button>
+                </div>
+            </div>
+        </div>
+        <footer class="text-center mt-4">
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CONFIGURATION ---
+            const API_KEY = "qllNQ-f749u-FQvYI-v8phw-6uh00-OB8h5-haQlE-9Siqm";
+            const APP_ID = "334898795";
+            const TABLE_NAME = "Siemens Stock";
+            const BARCODE_COLUMN = "index";
+            const NAME_COLUMN = "Name";
+            const PN_COLUMN = "PN";
+            const SN_COLUMN = "SN";
+            const LOCATION_COLUMN = "Location";
+            const DATE_COLUMN = "location verified date";
+
+            // --- Globals ---
+            const scannedItems = new Map();
+            const elements = {
+                submitButton: document.getElementById('submit-button'),
+                scanCount: document.getElementById('scan-count'),
+                itemsContainer: document.getElementById('scanned-items-container'),
+                placeholder: document.getElementById('placeholder-text'),
+                locationSelect: document.getElementById('location-select'),
+                barcodeInput: document.getElementById('barcode-input'),
+                statusText: document.getElementById('status-text'),
+                spinner: document.getElementById('spinner'),
+                dateOnlyCheckbox: document.getElementById('date-only-checkbox'),
+                selectAllCheckbox: document.getElementById('select-all-checkbox'),
+                addLocationBtn: document.getElementById('add-location-btn'),
+                newLocationForm: document.getElementById('new-location-form'),
+                newLocationInput: document.getElementById('new-location-input'),
+                saveLocationBtn: document.getElementById('save-location-btn')
+            };
+            let audioContext;
+            try { audioContext = new (window.AudioContext || window.webkitAudioContext)(); } 
+            catch (e) { console.error("Web Audio API not supported"); }
+
+            // --- CORE FUNCTIONS ---
+            const playBeep = () => {
+                if (!audioContext) return;
+                const o = audioContext.createOscillator(), g = audioContext.createGain();
+                o.connect(g); g.connect(audioContext.destination);
+                o.type = 'sine'; o.frequency.setValueAtTime(880, audioContext.currentTime);
+                g.gain.setValueAtTime(0.1, audioContext.currentTime);
+                o.start(); o.stop(audioContext.currentTime + 0.1);
+            };
+            
+            const getSelectedBarcodes = () => {
+                return Array.from(elements.itemsContainer.querySelectorAll('.item-checkbox:checked')).map(cb => cb.dataset.barcode);
+            };
+
+            const updateUI = () => {
+                const selectedCount = getSelectedBarcodes().length;
+                elements.scanCount.textContent = scannedItems.size;
+                elements.placeholder.style.display = scannedItems.size === 0 ? 'block' : 'none';
+                elements.submitButton.disabled = selectedCount === 0;
+                elements.submitButton.textContent = selectedCount > 0 ? `Update ${selectedCount} Selected Item(s)` : 'Update Selected Items';
+
+                const allCheckboxes = elements.itemsContainer.querySelectorAll('.item-checkbox');
+                elements.selectAllCheckbox.checked = allCheckboxes.length > 0 && selectedCount === allCheckboxes.length;
+            };
+            
+            const setStatus = (text, isError = false) => {
+                elements.statusText.textContent = text;
+                elements.statusText.style.color = isError ? '#ef4444' : '#6b7280';
+                 if(text){
+                    setTimeout(() => {
+                        if(elements.statusText.textContent === text){
+                             elements.statusText.textContent = '';
+                        }
+                    }, 3000);
+                 }
+            };
+            
+            const addItemToUI = (item) => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'item-card border bg-white p-3 rounded-lg shadow-sm mb-2 flex items-start';
+                itemCard.dataset.barcode = item[BARCODE_COLUMN];
+
+                const name = item[NAME_COLUMN] || 'N/A';
+                const pn = item[PN_COLUMN] || 'N/A';
+                const sn = item[SN_COLUMN] || 'N/A';
+                const date = item[DATE_COLUMN] ? new Date(item[DATE_COLUMN]).toLocaleDateString() : 'N/A';
+
+                itemCard.innerHTML = `
+                    <div class="flex items-center">
+                        <input type="checkbox" class="item-checkbox h-4 w-4 text-imed-teal focus:ring-imed-teal border-gray-300 rounded mr-4" data-barcode="${item[BARCODE_COLUMN]}">
+                        <div>
+                            <p class="font-bold text-gray-800">${item[BARCODE_COLUMN]}</p>
+                            <p class="text-sm text-gray-600">${name}</p>
+                            <p class="text-xs text-gray-500">PN: ${pn} | SN: ${sn}</p>
+                            <p class="text-xs text-gray-500 mt-1">Last Verified: ${date}</p>
+                        </div>
+                    </div>
+                    <button class="text-red-400 hover:text-red-600 font-bold text-xl ml-2" data-barcode-remove="${item[BARCODE_COLUMN]}">&times;</button>
+                `;
+                elements.itemsContainer.prepend(itemCard);
+            };
+
+            // --- API CALLS ---
+            const findItemByBarcode = async (barcode) => {
+                elements.spinner.classList.remove('hidden');
+                setStatus(`Looking up ${barcode}...`);
+                const API_URL = `https://api.appsheet.com/api/v2/apps/${APP_ID}/tables/${TABLE_NAME}/action`;
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'ApplicationAccessKey': API_KEY },
+                        body: JSON.stringify({ "Action": "Find", "Properties": {}, "Rows": [], "Selector": `FILTER("${TABLE_NAME}", [${BARCODE_COLUMN}] = "${barcode}")` })
+                    });
+                    if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+                    const data = await response.json();
+                    return data[0];
+                } catch (error) {
+                    console.error("API Find Error:", error);
+                    setStatus(error.message, true);
+                    return null;
+                } finally {
+                    elements.spinner.classList.add('hidden');
+                }
+            };
+
+            const updateItemsInAppSheet = async () => {
+                const selectedBarcodes = getSelectedBarcodes();
+                if (selectedBarcodes.length === 0) return;
+
+                elements.submitButton.textContent = "Updating...";
+                elements.submitButton.disabled = true;
+
+                const today = new Date();
+                const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+                const newLocation = elements.locationSelect.value;
+                const isDateOnlyUpdate = elements.dateOnlyCheckbox.checked;
+                
+                const rowsToUpdate = selectedBarcodes.map(barcode => {
+                    const row = { [BARCODE_COLUMN]: barcode, [DATE_COLUMN]: formattedDate };
+                    if (!isDateOnlyUpdate) {
+                        row[LOCATION_COLUMN] = newLocation;
+                    }
+                    return row;
+                });
+                
+                const API_URL = `https://api.appsheet.com/api/v2/apps/${APP_ID}/tables/${TABLE_NAME}/action`;
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'ApplicationAccessKey': API_KEY },
+                        body: JSON.stringify({ "Action": "Edit", "Properties": { "Locale": "en-US" }, "Rows": rowsToUpdate })
+                    });
+                    if (!response.ok) throw new Error(`API Update Error: ${response.statusText}`);
+                     
+                    setStatus(`Successfully updated ${rowsToUpdate.length} items!`);
+                    
+                    // Remove updated items from UI and state
+                    selectedBarcodes.forEach(barcode => {
+                        scannedItems.delete(barcode);
+                        const cardToRemove = document.querySelector(`[data-barcode="${barcode}"]`);
+                        if(cardToRemove) cardToRemove.remove();
+                    });
+
+                } catch(error){
+                    console.error("API Update Error:", error);
+                    setStatus(error.message, true);
+                } finally {
+                    updateUI(); // Resets button text and state
+                }
+            };
+
+            // --- EVENT LISTENERS ---
+            elements.barcodeInput.addEventListener('keypress', async (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const barcode = elements.barcodeInput.value.trim();
+                    if (!barcode) return;
+                    
+                    if (scannedItems.has(barcode)) {
+                        setStatus(`Item ${barcode} is already scanned.`, true);
+                        elements.barcodeInput.value = '';
+                        return;
+                    }
+
+                    const itemData = await findItemByBarcode(barcode);
+
+                    if (itemData) {
+                        playBeep();
+                        scannedItems.set(barcode, itemData);
+                        addItemToUI(itemData);
+                        setStatus(`Found: ${itemData[NAME_COLUMN] || barcode}`);
+                    } else {
+                        setStatus(`Item ${barcode} not found in AppSheet.`, true);
+                    }
+
+                    elements.barcodeInput.value = '';
+                    updateUI();
+                }
+            });
+            
+            elements.itemsContainer.addEventListener('click', (e) => {
+                const barcodeToRemove = e.target.dataset.barcodeRemove;
+                if (barcodeToRemove) {
+                    scannedItems.delete(barcodeToRemove);
+                    const cardToRemove = document.querySelector(`[data-barcode="${barcodeToRemove}"]`);
+                    if(cardToRemove){
+                        cardToRemove.classList.add('fade-out');
+                        cardToRemove.addEventListener('transitionend', () => cardToRemove.remove());
+                    }
+                }
+                
+                // Update UI regardless of what was clicked inside
+                updateUI();
+            });
+            
+            elements.selectAllCheckbox.addEventListener('change', (e) => {
+                const isChecked = e.target.checked;
+                elements.itemsContainer.querySelectorAll('.item-checkbox').forEach(cb => cb.checked = isChecked);
+                updateUI();
+            });
+
+            elements.dateOnlyCheckbox.addEventListener('change', (e) => {
+                elements.locationSelect.disabled = e.target.checked;
+            });
+
+            elements.submitButton.addEventListener('click', updateItemsInAppSheet);
+
+            elements.addLocationBtn.addEventListener('click', () => {
+                elements.newLocationForm.classList.toggle('hidden');
+                elements.newLocationInput.focus();
+            });
+
+            elements.saveLocationBtn.addEventListener('click', () => {
+                const newLocationName = elements.newLocationInput.value.trim();
+                if (newLocationName) {
+                    let exists = false;
+                    for (let i = 0; i < elements.locationSelect.options.length; i++) {
+                        if (elements.locationSelect.options[i].value === newLocationName) {
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if (!exists) {
+                        const newOption = document.createElement('option');
+                        newOption.value = newLocationName;
+                        newOption.textContent = newLocationName;
+                        elements.locationSelect.appendChild(newOption);
+
+                        const options = Array.from(elements.locationSelect.options);
+                        options.sort((a, b) => a.text.localeCompare(b.text));
+                        
+                        elements.locationSelect.innerHTML = '';
+                        options.forEach(opt => elements.locationSelect.appendChild(opt));
+                    }
+                    
+                    elements.locationSelect.value = newLocationName;
+                    
+                    elements.newLocationInput.value = '';
+                    elements.newLocationForm.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
